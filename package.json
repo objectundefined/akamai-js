@@ -1,0 +1,20 @@
+{
+  "name": "edgeauth-js",
+  "version": "0.0.1",
+  "description": "Implementation of Akamai's EdgeToken 2.0 Link Protection",
+  "main": "EdgeAuth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Akamai",
+    "EdgeAuth",
+    "AkamaiToken"
+  ],
+  "author": "Gabriel Lipson (gabriel@gotinder.com)",
+  "license": "ISC",
+  "dependencies": {
+    "underscore": "^1.6.0",
+    "underscore.string": "^2.3.3"
+  }
+}
