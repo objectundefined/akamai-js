@@ -46,14 +46,15 @@ EdgeAuth.prototype.generateToken = function ( conf ) {
   return format("%s%s=%s", mtoken, 'hmac', my_hmac ); 
 }
 
+// Note- times are in MS, idiomatic to Javascript
+
 function AkamaiTokenConfig(conf_obj) {
   var conf = this.conf = {
-    _start_time: new Date(),
+    _start_time: Date.now(),
     _key: 'aabbccddeeff00112233445566778899',
     _algo: 'sha256',
     _acl: '',
     _url: '',
-    _custom_window: 0,
     _window: 300000, // window in ms to conform to js
     ip: '', // todo: provide get/set and validate ipv4/ipv6
     session_id: '',
@@ -70,24 +71,12 @@ function AkamaiTokenConfig(conf_obj) {
       var st_time = st_date.getTime();
       var valid = !isNaN(st_time) && st_time > 0 || st_time < 4294967295000;
       assert(valid, "start_time invalid or out of range");
-      conf._start_time = st_date;
-    }
-  });
-  // automatically set window via start_time and expire_time
-  // via a proxied expire_time property.
-  Object.defineProperty(conf,'expire_time',{
-    get: function () { return new Date(conf._start_time.getTime() + conf.window ) },
-    set: function ( val ) {
-      var end_date = new Date(val);
-      var valid = !!end_date.valueOf();
-      assert(valid,"A valid date must be used to set expire_time (end_time)");
-      conf._custom_window = parseInt( end_date - conf.start_time );
+      conf._start_time = st_time;
     }
   });
   Object.defineProperty(conf,'window',{
-    get: function () { return conf._custom_window || conf._window },
+    get: function () { return conf._window },
     set: function ( val ) {
-      assert(!conf._custom_window,'Cannot set window after setting expire_time. expire_time sets window.');
       assert(!isNaN(val), 'Window must be a Number');
       conf._window = val;
     }
@@ -151,9 +140,9 @@ AkamaiTokenConfig.prototype.getField = function (field_name) {
   var field_val = this.conf[field_name];
   var repr_name = field_mappings.hasOwnProperty(field_name) ? field_mappings[field_name] : field_name ;
   if (field_name == 'expiration'){
-    field_val = parseInt(this.conf.start_time.getTime()/1000) + parseInt(this.conf.window/1000);
+    field_val = parseInt(this.conf.start_time/1000) + parseInt(this.conf.window/1000);
   } else if (field_name == 'start_time'){
-    field_val = parseInt(this.conf.start_time.getTime()/1000);
+    field_val = parseInt(this.conf.start_time/1000);
   } else if (field_name == 'acl') {
     if (this.conf.acl) {
       field_val = this.encode(this.conf.acl);
