@@ -1,2 +1,3 @@
-edgeauth-js
+akamai-js
 ===========
+URLAuth, EdgeAuth
