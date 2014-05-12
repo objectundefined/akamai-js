@@ -1,9 +1,9 @@
 var assert = require('assert');
 var crypto = require('crypto');
 
-module.exports = UrlAuth ;
+module.exports = UrlToken ;
 
-function UrlAuth ( opts ) {
+function UrlToken ( opts ) {
   this.salt = opts && opts.salt;
   this.param = opts && opts.param;
   this.extract = opts && opts.extract;
@@ -14,7 +14,7 @@ function UrlAuth ( opts ) {
   )
 }
 
-UrlAuth.prototype.signUrl = function ( path , expiration_date ) {
+UrlToken.prototype.signedUrl = function ( path , expiration_date ) {
   var now = Date.now();
   var future = expiration_date && expiration_date.getTime && expiration_date.getTime();
   assert(
