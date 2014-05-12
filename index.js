@@ -1,2 +1,2 @@
 exports.EdgeAuth = require('./EdgeAuth');
-exports.URLAuth = require('./URLAuth');
+exports.URLAuth = require('./UrlAuth');
